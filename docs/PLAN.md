@@ -99,43 +99,34 @@ Transform this YouTube MCP server into a clean, GraphQL-based architecture (foll
 OAuth2 replaces the API key entirely — it handles both read and write operations,
 so there's no reason to maintain two auth mechanisms.
 
-- [ ] Create `src/auth/oauth2.ts`
+- [x] Create `src/auth/oauth2.ts`
   - OAuth2 flow using `googleapis` built-in OAuth2 client
   - Browser-based consent flow for initial authorization
   - Token storage (file-based, e.g. `~/.youtube-mcp/tokens.json`)
   - Automatic token refresh
-- [ ] Create `src/auth/token-store.ts` — secure token persistence
-- [ ] Update `src/services/youtube-client.ts` to use OAuth2 only (remove API key support)
-- [ ] Remove `YOUTUBE_API_KEY` env var requirement from `src/index.ts`
-- [ ] Add env vars: `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET`
-- [ ] Add setup command or first-run flow for OAuth consent
+- [x] Create `src/auth/token-store.ts` — secure token persistence
+- [x] Update `src/services/youtube-client.ts` — OAuth2 first, API key fallback for read-only
+- [x] Add env vars: `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET`
+- [x] Add `--auth` flag to `src/cli.ts` for browser consent flow
 - [ ] Publish the OAuth consent screen (or move to production status) in Google Cloud Console
   — apps in "Testing" mode issue refresh tokens that expire after **7 days**.
   Publishing avoids this; it doesn't require public listing, just filling out the consent screen.
 
 ### 3b: Playlist Write Service Methods
-- [ ] Add to `PlaylistService`:
+- [x] Add to `PlaylistService`:
   - `createPlaylist({ title, description, privacyStatus })` → `youtube.playlists.insert()`
   - `updatePlaylist({ playlistId, title, description, privacyStatus })` → `youtube.playlists.update()`
   - `deletePlaylist({ playlistId })` → `youtube.playlists.delete()`
   - `addToPlaylist({ playlistId, videoId, position? })` → `youtube.playlistItems.insert()`
   - `removeFromPlaylist({ playlistItemId })` → `youtube.playlistItems.delete()`
-  - `reorderPlaylistItem({ playlistItemId, position })` → `youtube.playlistItems.update()`
+  - `reorderPlaylistItem({ playlistItemId, playlistId, position })` → `youtube.playlistItems.update()`
 
 ### 3c: GraphQL Mutations
-- [ ] Add mutations to schema:
-  ```graphql
-  type Mutation {
-    createPlaylist(title: String!, description: String, privacyStatus: PrivacyStatus): PlaylistResult!
-    updatePlaylist(playlistId: String!, title: String, description: String): PlaylistResult!
-    deletePlaylist(playlistId: String!): DeleteResult!
-    addToPlaylist(playlistId: String!, videoId: String!, position: Int): PlaylistItemResult!
-    removeFromPlaylist(playlistItemId: String!): DeleteResult!
-    reorderPlaylistItem(playlistItemId: String!, position: Int!): PlaylistItemResult!
-  }
-  ```
-- [ ] Add mutation resolvers
-- [ ] Test full CRUD cycle: create playlist → search videos → add to playlist → verify
+- [x] Add mutations to schema (`PrivacyStatus` enum, `PlaylistResult`, `PlaylistItemResult`, `DeleteResult`)
+- [x] Add mutation resolvers (all 6, each calls `requireAuth()` then the service method)
+- [x] Updated tool description with mutation examples
+- [x] Build passes with strict TypeScript
+- [ ] Live test full CRUD cycle: create playlist → search videos → add to playlist → verify (requires OAuth2 setup)
 
 **Done when:** LLM can create and manage YouTube playlists through GraphQL mutations.
 

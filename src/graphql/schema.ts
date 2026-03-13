@@ -155,6 +155,80 @@ const QueryType = `#graphql
 `;
 
 // =============================================================================
+// MUTATION TYPES
+// =============================================================================
+
+const MutationResultTypes = `#graphql
+  enum PrivacyStatus {
+    public
+    private
+    unlisted
+  }
+
+  """Result of a playlist create/update operation"""
+  type PlaylistResult {
+    success: Boolean!
+    playlistId: String
+    title: String
+    error: String
+  }
+
+  """Result of an add/reorder playlist item operation"""
+  type PlaylistItemResult {
+    success: Boolean!
+    playlistItemId: String
+    videoId: String
+    position: Int
+    error: String
+  }
+
+  """Result of a delete operation"""
+  type DeleteResult {
+    success: Boolean!
+    error: String
+  }
+`;
+
+const MutationType = `#graphql
+  type Mutation {
+    """Create a new playlist on the authenticated user's account"""
+    createPlaylist(
+      title: String!
+      description: String
+      privacyStatus: PrivacyStatus = private
+    ): PlaylistResult!
+
+    """Update an existing playlist's metadata"""
+    updatePlaylist(
+      playlistId: String!
+      title: String!
+      description: String
+      privacyStatus: PrivacyStatus
+    ): PlaylistResult!
+
+    """Delete a playlist"""
+    deletePlaylist(playlistId: String!): DeleteResult!
+
+    """Add a video to a playlist"""
+    addToPlaylist(
+      playlistId: String!
+      videoId: String!
+      position: Int
+    ): PlaylistItemResult!
+
+    """Remove an item from a playlist (use playlistItemId, not videoId)"""
+    removeFromPlaylist(playlistItemId: String!): DeleteResult!
+
+    """Move a playlist item to a different position"""
+    reorderPlaylistItem(
+      playlistItemId: String!
+      playlistId: String!
+      position: Int!
+    ): PlaylistItemResult!
+  }
+`;
+
+// =============================================================================
 // COMBINED SCHEMA EXPORT
 // =============================================================================
 
@@ -167,4 +241,6 @@ export const typeDefs = [
   TranscriptSegmentType,
   TranscriptType,
   QueryType,
+  MutationResultTypes,
+  MutationType,
 ].join('\n');

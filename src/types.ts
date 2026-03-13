@@ -77,3 +77,43 @@ export interface PlaylistItemsParams {
   playlistId: string;
   maxResults?: number;
 }
+
+// =============================================================================
+// PLAYLIST WRITE PARAMS (OAuth2 required)
+// =============================================================================
+
+export type PrivacyStatus = 'public' | 'private' | 'unlisted';
+
+export interface CreatePlaylistParams {
+  title: string;
+  description?: string;
+  privacyStatus?: PrivacyStatus;
+}
+
+export interface UpdatePlaylistParams {
+  playlistId: string;
+  title: string;
+  description?: string;
+  privacyStatus?: PrivacyStatus;
+}
+
+export interface DeletePlaylistParams {
+  playlistId: string;
+}
+
+export interface AddToPlaylistParams {
+  playlistId: string;
+  videoId: string;
+  position?: number;
+}
+
+export interface RemoveFromPlaylistParams {
+  playlistItemId: string;
+}
+
+export interface ReorderPlaylistItemParams {
+  playlistItemId: string;
+  playlistId: string;
+  position: number;
+}
+

@@ -75,7 +75,15 @@ QUERIES:
 { playlistItems(playlistId: "PLxxx", maxResults: 50) { playlistItemId videoId title position } }
 { searchPlaylists(query: "workout music") { playlistId title channelTitle } }
 { transcript(videoId: "abc123") { segments { timestamp text } } }
-{ searchTranscript(videoId: "abc123", query: "introduction") { matches { timestamp text } totalMatches } }`,
+{ searchTranscript(videoId: "abc123", query: "introduction") { matches { timestamp text } totalMatches } }
+
+MUTATIONS (OAuth2 required - run with --auth first):
+mutation { createPlaylist(title: "My Mix", privacyStatus: private) { success playlistId } }
+mutation { updatePlaylist(playlistId: "PLxxx", title: "New Name") { success } }
+mutation { deletePlaylist(playlistId: "PLxxx") { success } }
+mutation { addToPlaylist(playlistId: "PLxxx", videoId: "abc123") { success playlistItemId position } }
+mutation { removeFromPlaylist(playlistItemId: "PLitemsxxx") { success } }
+mutation { reorderPlaylistItem(playlistItemId: "PLitemsxxx", playlistId: "PLxxx", position: 0) { success position } }`,
     inputSchema: {
       type: 'object',
       properties: {

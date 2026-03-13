@@ -192,5 +192,88 @@ export function createResolvers(
         };
       },
     },
+
+    Mutation: {
+      createPlaylist: async (_: unknown, args: { title: string; description?: string; privacyStatus?: string }) => {
+        try {
+          const item = await playlistService.createPlaylist({
+            title: args.title,
+            description: args.description,
+            privacyStatus: args.privacyStatus as any,
+          });
+          return { success: true, playlistId: item.id, title: item.snippet?.title };
+        } catch (error: unknown) {
+          return { success: false, error: error instanceof Error ? error.message : String(error) };
+        }
+      },
+
+      updatePlaylist: async (_: unknown, args: { playlistId: string; title: string; description?: string; privacyStatus?: string }) => {
+        try {
+          const item = await playlistService.updatePlaylist({
+            playlistId: args.playlistId,
+            title: args.title,
+            description: args.description,
+            privacyStatus: args.privacyStatus as any,
+          });
+          return { success: true, playlistId: item.id, title: item.snippet?.title };
+        } catch (error: unknown) {
+          return { success: false, error: error instanceof Error ? error.message : String(error) };
+        }
+      },
+
+      deletePlaylist: async (_: unknown, args: { playlistId: string }) => {
+        try {
+          await playlistService.deletePlaylist({ playlistId: args.playlistId });
+          return { success: true };
+        } catch (error: unknown) {
+          return { success: false, error: error instanceof Error ? error.message : String(error) };
+        }
+      },
+
+      addToPlaylist: async (_: unknown, args: { playlistId: string; videoId: string; position?: number }) => {
+        try {
+          const item = await playlistService.addToPlaylist({
+            playlistId: args.playlistId,
+            videoId: args.videoId,
+            position: args.position,
+          });
+          return {
+            success: true,
+            playlistItemId: item.id,
+            videoId: item.snippet?.resourceId?.videoId,
+            position: item.snippet?.position,
+          };
+        } catch (error: unknown) {
+          return { success: false, error: error instanceof Error ? error.message : String(error) };
+        }
+      },
+
+      removeFromPlaylist: async (_: unknown, args: { playlistItemId: string }) => {
+        try {
+          await playlistService.removeFromPlaylist({ playlistItemId: args.playlistItemId });
+          return { success: true };
+        } catch (error: unknown) {
+          return { success: false, error: error instanceof Error ? error.message : String(error) };
+        }
+      },
+
+      reorderPlaylistItem: async (_: unknown, args: { playlistItemId: string; playlistId: string; position: number }) => {
+        try {
+          const item = await playlistService.reorderPlaylistItem({
+            playlistItemId: args.playlistItemId,
+            playlistId: args.playlistId,
+            position: args.position,
+          });
+          return {
+            success: true,
+            playlistItemId: item.id,
+            videoId: item.snippet?.resourceId?.videoId,
+            position: item.snippet?.position,
+          };
+        } catch (error: unknown) {
+          return { success: false, error: error instanceof Error ? error.message : String(error) };
+        }
+      },
+    },
   };
 }
