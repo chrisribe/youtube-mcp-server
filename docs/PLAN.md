@@ -12,22 +12,22 @@ Transform this YouTube MCP server into a clean, GraphQL-based architecture (foll
 
 **Objective:** Remove dead code, extract shared YouTube client, enable strict TypeScript.
 
-- [ ] Delete `src/functions/` (excluded from build, dead code)
-- [ ] Delete duplicate files: `youtube-mcp-readme.md`, `youtube-readme.md`, `zubeid-youtube-mcp-server-1.0.0.tgz`
-- [ ] Remove Smithery/Docker config (not needed for personal use): `smithery.yaml`, `Dockerfile`, `.dockerignore`
-- [ ] Deduplicate `src/cli.ts` and `src/index.ts` (identical logic)
-- [ ] Create `src/services/youtube-client.ts` — shared YouTube API client
+- [x] Delete `src/functions/` (excluded from build, dead code)
+- [x] Delete duplicate files: `youtube-mcp-readme.md`, `youtube-readme.md`, `zubeid-youtube-mcp-server-1.0.0.tgz`
+- [x] Remove Smithery/Docker config (not needed for personal use): `smithery.yaml`, `Dockerfile`, `.dockerignore`
+- [x] Deduplicate `src/cli.ts` and `src/index.ts` (identical logic)
+- [x] Create `src/services/youtube-client.ts` — shared YouTube API client
   - Single `initialize()` with lazy init
   - Eliminates 4x copy-pasted init pattern across services
   - Services receive the client via constructor injection
-- [ ] Refactor all 4 services to use shared client
-- [ ] Update `tsconfig.json`:
+- [x] Refactor all 4 services to use shared client
+- [x] Update `tsconfig.json`:
   - `strict: true`
   - `noImplicitAny: true`
   - Remove `functions/` exclude (deleted)
   - Include all of `src/`
-- [ ] Fix types: remove `as unknown as` casts in server.ts
-- [ ] Verify build: `npm run build`
+- [x] Fix types: remove `as unknown as` casts in server.ts
+- [x] Verify build: `npm run build`
 
 **Done when:** Build passes with strict mode, no duplicated init code, no dead files.
 
@@ -109,6 +109,9 @@ so there's no reason to maintain two auth mechanisms.
 - [ ] Remove `YOUTUBE_API_KEY` env var requirement from `src/index.ts`
 - [ ] Add env vars: `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET`
 - [ ] Add setup command or first-run flow for OAuth consent
+- [ ] Publish the OAuth consent screen (or move to production status) in Google Cloud Console
+  — apps in "Testing" mode issue refresh tokens that expire after **7 days**.
+  Publishing avoids this; it doesn't require public listing, just filling out the consent screen.
 
 ### 3b: Playlist Write Service Methods
 - [ ] Add to `PlaylistService`:
