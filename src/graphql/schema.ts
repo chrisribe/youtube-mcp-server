@@ -131,6 +131,12 @@ const QueryType = `#graphql
     """Get channel details"""
     channel(channelId: String!): Channel
 
+    """Get authenticated user's channel details (OAuth2 required)"""
+    myChannel: Channel
+
+    """List all channels available to the authenticated user (OAuth2 required)"""
+    myChannels: [Channel!]!
+
     """List videos from a channel"""
     channelVideos(channelId: String!, maxResults: Int): [SearchResult!]!
 

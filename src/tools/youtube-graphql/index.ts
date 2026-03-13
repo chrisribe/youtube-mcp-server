@@ -69,6 +69,8 @@ QUERIES:
 { trendingVideos(regionCode: "US", maxResults: 10) { videoId title } }
 { relatedVideos(videoId: "abc123") { videoId title } }
 { channel(channelId: "UCxxx") { title subscriberCount videoCount } }
+{ myChannel { channelId title subscriberCount uploadsPlaylistId } }
+{ myChannels { channelId title subscriberCount uploadsPlaylistId } }
 { channelVideos(channelId: "UCxxx", maxResults: 20) { videoId title } }
 { channelPlaylists(channelId: "UCxxx") { playlistId title itemCount } }
 { playlist(playlistId: "PLxxx") { title itemCount } }

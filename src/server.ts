@@ -48,6 +48,7 @@ export async function startMcpServer() {
 
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.log('YouTube MCP Server v2.0.0 started successfully');
+    // Keep stdout clean for MCP JSON-RPC frames; diagnostics must go to stderr.
+    console.error('YouTube MCP Server v2.0.0 started successfully');
     return server;
 }

@@ -35,6 +35,36 @@ export class ChannelService {
   }
 
   /**
+   * Get authenticated user's channel details (OAuth2 required)
+   */
+  async getMyChannel(): Promise<any> {
+    try {
+      const channels = await this.getMyChannels();
+      return channels[0] || null;
+    } catch (error) {
+      throw new Error(`Failed to get authenticated channel: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * List all channels for the authenticated user (OAuth2 required)
+   */
+  async getMyChannels(): Promise<any[]> {
+    try {
+      this.client.requireAuth();
+
+      const response = await this.youtube.channels.list({
+        part: ['snippet', 'statistics', 'contentDetails'],
+        mine: true
+      });
+
+      return response.data.items || [];
+    } catch (error) {
+      throw new Error(`Failed to list authenticated channels: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
    * Get channel playlists
    */
   async getPlaylists({ 

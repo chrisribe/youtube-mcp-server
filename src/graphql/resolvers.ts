@@ -148,6 +148,16 @@ export function createResolvers(
         return mapChannel(item);
       },
 
+      myChannel: async () => {
+        const item = await channelService.getMyChannel();
+        return mapChannel(item);
+      },
+
+      myChannels: async () => {
+        const items = await channelService.getMyChannels();
+        return items.map(mapChannel);
+      },
+
       channelVideos: async (_: unknown, args: { channelId: string; maxResults?: number }) => {
         const items = await channelService.listVideos({ channelId: args.channelId, maxResults: args.maxResults });
         return items.map(mapSearchResult);

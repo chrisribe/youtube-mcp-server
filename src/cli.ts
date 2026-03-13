@@ -48,8 +48,9 @@ if (args.includes('--auth')) {
   }
 
   if (!hasTokens && hasApiKey) {
-    console.log('Note: Running in read-only mode (API key). Playlist write operations require OAuth2.');
-    console.log(`      Run with --auth to enable full access. Tokens stored at: ${getTokenPath_public()}`);
+    // Keep stdout reserved for MCP protocol output.
+    console.error('Note: Running in read-only mode (API key). Playlist write operations require OAuth2.');
+    console.error(`      Run with --auth to enable full access. Tokens stored at: ${getTokenPath_public()}`);
   }
 
   startMcpServer()
