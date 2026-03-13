@@ -38,12 +38,12 @@ Transform this YouTube MCP server into a clean, GraphQL-based architecture (foll
 **Objective:** Replace 7 inline MCP tools with 1 GraphQL tool, following simple-memory-mcp architecture.
 
 ### 2a: ToolRegistry Pattern
-- [ ] Create `src/types/tools.ts` — Tool, ToolDefinition, ToolContext interfaces
-- [ ] Create `src/tools/index.ts` — ToolRegistry class (from simple-memory pattern)
-- [ ] Refactor `src/server.ts` to use ToolRegistry instead of inline switch
+- [x] Create `src/types/tools.ts` — Tool, ToolDefinition, ToolContext interfaces
+- [x] Create `src/tools/index.ts` — ToolRegistry class (from simple-memory pattern)
+- [x] Refactor `src/server.ts` to use ToolRegistry instead of inline switch
 
 ### 2b: GraphQL Schema
-- [ ] Create `src/graphql/schema.ts` — YouTube GraphQL type definitions
+- [x] Create `src/graphql/schema.ts` — YouTube GraphQL type definitions
   ```graphql
   type Video { videoId, title, description, channelTitle, duration, stats, ... }
   type Channel { channelId, title, description, stats, ... }
@@ -69,8 +69,8 @@ Transform this YouTube MCP server into a clean, GraphQL-based architecture (foll
   ```
 
 ### 2c: GraphQL Resolvers
-- [ ] Create `src/graphql/resolvers.ts` — Maps queries to existing service methods
-- [ ] Wire up all currently-unused service methods:
+- [x] Create `src/graphql/resolvers.ts` — Maps queries to existing service methods
+- [x] Wire up all currently-unused service methods:
   - `VideoService.getVideoStats()`
   - `VideoService.getTrendingVideos()`
   - `VideoService.getRelatedVideos()`
@@ -81,10 +81,10 @@ Transform this YouTube MCP server into a clean, GraphQL-based architecture (foll
   - `ChannelService.getStatistics()`
 
 ### 2d: YouTube GraphQL Tool
-- [ ] Create `src/tools/youtube-graphql/index.ts` — Single MCP tool
-- [ ] Remove old inline tool definitions from server.ts
-- [ ] Update server.ts to slim MCP setup (delegates to ToolRegistry)
-- [ ] Verify build + manual test with a GraphQL query
+- [x] Create `src/tools/youtube-graphql/index.ts` — Single MCP tool
+- [x] Remove old inline tool definitions from server.ts
+- [x] Update server.ts to slim MCP setup (delegates to ToolRegistry)
+- [x] Verify build + manual test with a GraphQL query
 
 **Done when:** 1 MCP tool (`youtube-graphql`) handles all read operations that previously needed 7+ tools.
 
