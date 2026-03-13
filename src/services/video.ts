@@ -1,34 +1,18 @@
-import { google } from 'googleapis';
+import { YouTubeClient } from './youtube-client.js';
 import { VideoParams, SearchParams, TrendingParams, RelatedVideosParams } from '../types.js';
 
 /**
  * Service for interacting with YouTube videos
  */
 export class VideoService {
-  private youtube;
-  private initialized = false;
+  private client: YouTubeClient;
 
-  constructor() {
-    // Don't initialize in constructor
+  constructor(client: YouTubeClient) {
+    this.client = client;
   }
 
-  /**
-   * Initialize the YouTube client only when needed
-   */
-  private initialize() {
-    if (this.initialized) return;
-    
-    const apiKey = process.env.YOUTUBE_API_KEY;
-    if (!apiKey) {
-      throw new Error('YOUTUBE_API_KEY environment variable is not set.');
-    }
-
-    this.youtube = google.youtube({
-      version: 'v3',
-      auth: apiKey
-    });
-    
-    this.initialized = true;
+  private get youtube() {
+    return this.client.getClient();
   }
 
   /**
@@ -39,7 +23,6 @@ export class VideoService {
     parts = ['snippet', 'contentDetails', 'statistics'] 
   }: VideoParams): Promise<any> {
     try {
-      this.initialize();
       
       const response = await this.youtube.videos.list({
         part: parts,
@@ -60,7 +43,6 @@ export class VideoService {
     maxResults = 10 
   }: SearchParams): Promise<any[]> {
     try {
-      this.initialize();
       
       const response = await this.youtube.search.list({
         part: ['snippet'],
@@ -82,7 +64,6 @@ export class VideoService {
     videoId 
   }: { videoId: string }): Promise<any> {
     try {
-      this.initialize();
       
       const response = await this.youtube.videos.list({
         part: ['statistics'],
@@ -104,7 +85,6 @@ export class VideoService {
     videoCategoryId = ''
   }: TrendingParams): Promise<any[]> {
     try {
-      this.initialize();
       
       const params: any = {
         part: ['snippet', 'contentDetails', 'statistics'],
@@ -133,15 +113,16 @@ export class VideoService {
     maxResults = 10 
   }: RelatedVideosParams): Promise<any[]> {
     try {
-      this.initialize();
       
-      const response = await this.youtube.search.list({
+      // relatedToVideoId was removed from the googleapis types in newer versions;
+      // cast to any to retain functionality until we migrate to GraphQL in Phase 2
+      const response = await (this.youtube.search.list as any)({
         part: ['snippet'],
         relatedToVideoId: videoId,
         maxResults,
         type: ['video']
       });
-      
+
       return response.data.items || [];
     } catch (error) {
       throw new Error(`Failed to get related videos: ${error instanceof Error ? error.message : String(error)}`);

@@ -1,34 +1,18 @@
-import { google } from 'googleapis';
+import { YouTubeClient } from './youtube-client.js';
 import { ChannelParams, ChannelVideosParams } from '../types.js';
 
 /**
  * Service for interacting with YouTube channels
  */
 export class ChannelService {
-  private youtube;
-  private initialized = false;
+  private client: YouTubeClient;
 
-  constructor() {
-    // Don't initialize in constructor
+  constructor(client: YouTubeClient) {
+    this.client = client;
   }
 
-  /**
-   * Initialize the YouTube client only when needed
-   */
-  private initialize() {
-    if (this.initialized) return;
-    
-    const apiKey = process.env.YOUTUBE_API_KEY;
-    if (!apiKey) {
-      throw new Error('YOUTUBE_API_KEY environment variable is not set.');
-    }
-
-    this.youtube = google.youtube({
-      version: 'v3',
-      auth: apiKey
-    });
-    
-    this.initialized = true;
+  private get youtube() {
+    return this.client.getClient();
   }
 
   /**
@@ -38,7 +22,6 @@ export class ChannelService {
     channelId 
   }: ChannelParams): Promise<any> {
     try {
-      this.initialize();
       
       const response = await this.youtube.channels.list({
         part: ['snippet', 'statistics', 'contentDetails'],
@@ -59,7 +42,6 @@ export class ChannelService {
     maxResults = 50 
   }: ChannelVideosParams): Promise<any[]> {
     try {
-      this.initialize();
       
       const response = await this.youtube.playlists.list({
         part: ['snippet', 'contentDetails'],
@@ -81,7 +63,6 @@ export class ChannelService {
     maxResults = 50 
   }: ChannelVideosParams): Promise<any[]> {
     try {
-      this.initialize();
       
       const response = await this.youtube.search.list({
         part: ['snippet'],
@@ -104,7 +85,6 @@ export class ChannelService {
     channelId 
   }: ChannelParams): Promise<any> {
     try {
-      this.initialize();
       
       const response = await this.youtube.channels.list({
         part: ['statistics'],

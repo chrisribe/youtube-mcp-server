@@ -4,6 +4,7 @@ import {
     CallToolRequestSchema,
     ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
+import { YouTubeClient } from './services/youtube-client.js';
 import { VideoService } from './services/video.js';
 import { TranscriptService } from './services/transcript.js';
 import { PlaylistService } from './services/playlist.js';
@@ -31,10 +32,11 @@ export async function startMcpServer() {
         }
     );
 
-    const videoService = new VideoService();
+    const youtubeClient = new YouTubeClient();
+    const videoService = new VideoService(youtubeClient);
     const transcriptService = new TranscriptService();
-    const playlistService = new PlaylistService();
-    const channelService = new ChannelService();
+    const playlistService = new PlaylistService(youtubeClient);
+    const channelService = new ChannelService(youtubeClient);
 
     server.setRequestHandler(ListToolsRequestSchema, async () => {
         return {
